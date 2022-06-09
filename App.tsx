@@ -1,5 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import Torch from 'react-native-torch';
+import RNShake from 'react-native-shake';
 import imageOn from './assets/icons/eco-light.png';
 import imageOff from './assets/icons/eco-light-off.png';
 import logoDioWhite from './assets/icons/logo-dio.png';
@@ -7,6 +9,18 @@ import logoDio from './assets/icons/logo-dio-white.png';
 
 function App() {
   const [toggle, setToggle] = useState(false);
+
+  useEffect(() => {
+    const subscription = RNShake.addListener(() => {
+      setToggle(!toggle);
+    });
+
+    return () => subscription.remove();
+  }, [toggle]);
+
+  useEffect(() => {
+    Torch.switchState(toggle);
+  }, [toggle]);
 
   function handleToggle() {
     setToggle(!toggle);
